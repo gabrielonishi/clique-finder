@@ -16,8 +16,19 @@ cliques_maximais = list(nx.find_cliques(G))
 # Encontrar a clique máxima (a maior)
 clique_maxima = max(cliques_maximais, key=len)
 
+tamanho_clique_maxima = len(max(cliques_maximais, key=len))
+cliques_enormes = list()
+
 print("Cliques maximais encontradas:")
 for clique in cliques_maximais:
     print(clique)
+    if(len(clique) == tamanho_clique_maxima):
+        cliques_enormes.append(clique)
 
-print("Clique máxima encontrada:", clique_maxima)
+print("Clique máxima encontrada:")
+
+for clique in cliques_enormes:
+    for i, num in enumerate(clique):
+        clique[i] = int(num)
+    clique.sort(reverse=True)
+    print(clique)

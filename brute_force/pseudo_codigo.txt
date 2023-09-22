@@ -1,0 +1,45 @@
+Função EncontrarCliqueMaxima(grafo, numVertices)
+    cliqueMaxima = ListaVazia()
+    candidatos = ListaDeNós()  # Inicialmente, todos os nós são candidatos
+
+    Para cada i de 0 até numVertices - 1 Faça
+        Adicione i à lista de candidatos
+
+    Enquanto candidatos não estiver vazia Faça
+        v = Último elemento de candidatos
+        Remova o último elemento de candidatos
+
+        podeAdicionar = Verdadeiro
+
+        Para cada u em cliqueMaxima Faça
+            Se grafo[u][v] == 0 Então
+                podeAdicionar = Falso
+                Pare o loop
+            Fim Se
+        Fim Para
+
+        Se podeAdicionar for Verdadeiro Então
+            Adicione v a cliqueMaxima
+            novosCandidatos = ListaDeNós()
+
+            Para cada u em candidatos Faça
+                adjacenteATodos = Verdadeiro
+
+                Para cada c em cliqueMaxima Faça
+                    Se grafo[u][c] == 0 Então
+                        adjacenteATodos = Falso
+                        Pare o loop
+                    Fim Se
+                Fim Para
+
+                Se adjacenteATodos for Verdadeiro Então
+                    Adicione u a novosCandidatos
+                Fim Se
+            Fim Para
+
+            candidatos = novosCandidatos
+        Fim Se
+    Fim Enquanto
+
+    Retorne cliqueMaxima
+Fim Função
