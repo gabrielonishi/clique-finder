@@ -1,34 +1,32 @@
+'''
+Utiliza a biblioteca netorkx para encontrar a clique máxima
+para fins de correção
+
+Baseado no arquivo cedido pelos professores
+'''
+
 import networkx as nx
 
-# Nome do arquivo de entrada
-nome_arquivo = "grafo.txt"
+def convert_items_to_int(clique:list)->list:
+    for i, node in enumerate(clique):
+        clique[i] = int(node)
+    
+    return clique
 
-# Abrir o arquivo e pular a primeira linha
-with open(nome_arquivo, 'r') as arquivo:
-    next(arquivo)  # Pula a primeira linha
+file_name = "grafo20nos.txt"
 
-    # Lê o grafo a partir das linhas restantes
-    G = nx.parse_adjlist(arquivo)
+with open(file_name, 'r') as file:
+    next(file)
+    G = nx.parse_adjlist(file)
 
-# Encontrar todas as cliques maximais
-cliques_maximais = list(nx.find_cliques(G))
+cliques = list(nx.find_cliques(G))
 
-# Encontrar a clique máxima (a maior)
-clique_maxima = max(cliques_maximais, key=len)
+largest_clique_size = len(max(cliques, key=len))
 
-tamanho_clique_maxima = len(max(cliques_maximais, key=len))
-cliques_enormes = list()
-
-print("Cliques maximais encontradas:")
-for clique in cliques_maximais:
-    print(clique)
-    if(len(clique) == tamanho_clique_maxima):
-        cliques_enormes.append(clique)
-
-print("Clique máxima encontrada:")
-
-for clique in cliques_enormes:
-    for i, num in enumerate(clique):
-        clique[i] = int(num)
-    clique.sort(reverse=True)
-    print(clique)
+print('Tamanho da clique máxima: ', largest_clique_size)
+print('Cliques máximas encontradas:')
+for clique in cliques:
+    if(len(clique) == largest_clique_size):
+        converted_clique = convert_items_to_int(clique)
+        converted_clique.sort(reverse=True)
+        print(converted_clique)
