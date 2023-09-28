@@ -32,6 +32,7 @@ vector<vector<int>> ReadGraph(const string &fileName, int &numNodes, int &numEdg
 
 vector<int> FindClique(vector<vector<int>> &graph, int &startingNode, int &numNodes)
 {
+    startingNode++;
     vector<int> clique = {startingNode};
 
     for (int candidate = startingNode + 1; candidate < numNodes; candidate++)
@@ -50,8 +51,6 @@ vector<int> FindClique(vector<vector<int>> &graph, int &startingNode, int &numNo
             clique.push_back(candidate);
         }
     }
-
-    cout << clique.size() << endl;
 
     return clique;
 }
@@ -82,7 +81,7 @@ int main()
 
     for (unsigned int i = 0; i < maximumClique.size(); i++)
     {
-        cout << maximumClique[i] << " ";
+        cout << maximumClique[i] + 1 << " ";
     }
 
     cout << endl;
