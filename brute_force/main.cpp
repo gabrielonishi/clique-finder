@@ -5,80 +5,106 @@
 
 using namespace std;
 
-// Função para ler o grafo a partir do arquivo de entrada
-vector<vector<int>> LerGrafo(const string& nomeArquivo, int& numVertices, int& numArestas) {
-    ifstream arquivo(nomeArquivo);
-    arquivo >> numVertices >> numArestas;
+vector<vector<int>> ReadGraph(const string &fileName, int &numNodes, int &numEdges)
+{
+    /*
+    Lê grafo de um arquivo txt, preenche informações sobre número de
+    vértices e números de arestas e cria uma matriz de adjacência para
+    representar o grafo
+    */
+    ifstream file(fileName);
+    file >> numNodes >> numEdges;
 
-    vector<vector<int>> grafo(numVertices, vector<int>(numVertices, 0));
+    vector<vector<int>> graph(numNodes, vector<int>(numNodes, 0));
 
-    for (int i = 0; i < numArestas; ++i) {
+    for (int i = 0; i < numEdges; ++i)
+    {
         int u, v;
-        arquivo >> u >> v;
-        grafo[u - 1][v - 1] = 1;
-        grafo[v - 1][u - 1] = 1;  // O grafo é não direcionado
+        file >> u >> v;
+        graph[u - 1][v - 1] = 1;
+        graph[v - 1][u - 1] = 1;
     }
 
-    arquivo.close();
+    file.close();
 
-    return grafo;
+    return graph;
 }
 
-int main(){
-    string nomeArquivo = "grafo.txt";
+int main()
+{
+    string fileName = "grafo20nos.txt";
 
-    int numVertices, numArestas;
+    int numNodes, numEdges;
 
-    vector<vector<int>> grafo = LerGrafo(nomeArquivo, numVertices, numArestas);
+    vector<vector<int>> graph = ReadGraph(fileName, numNodes, numEdges);
 
+    cout << numNodes << " " << numEdges << endl;
 
-    cout << numVertices << " " << numArestas << endl;
+    vector<int> maximumClique, candidates;
 
-    vector<int> cliqueMaxima, candidatos;
-
-    for(int i=0; i<numVertices; i++){
-        candidatos.push_back(i);
+    for (int i = 0; i < numNodes; i++)
+    {
+        candidates.push_back(i);
     }
 
-    while (candidatos.size()!=0){
-        int v = candidatos.back();
-        candidatos.pop_back();
-        
-        bool podeAdicionar = true;
+    while (candidates.size() != 0)
+    {
+        int currentCandidate = candidates.back();
+        candidates.pop_back();
 
-        for(int& u : cliqueMaxima){
-            if(grafo[u][v] == 0){
-                podeAdicionar = false;
+        bool alreadyInClique = false;
+
+        for(int i = 0; i<maximumClique.size();i++){
+            if(maximumClique[i] == currentCandidate){
+                alreadyInClique = true;
                 break;
             }
         }
 
-        if(podeAdicionar){
-            cliqueMaxima.push_back(v);
-            vector<int> novosCandidatos;
-            for(int& u : candidatos){
-                bool ajdacentesATodos = true;
-                for(int& c : cliqueMaxima){
-                    if(grafo[u][c] == 0){
-                        ajdacentesATodos = false;
+        for (int &node : maximumClique)
+        {
+            if (graph[candidate][currentCandidate] == 1)
+            {
+                alreadyInClique = true;
+                break;
+            }
+        }
+
+        if (!alreadyInClique)
+        {
+            maximumClique.push_back(currentCandidate);
+            vector<int> newCandidates;
+            for (int &candidate : candidates)
+            {
+                bool belongsToClique = true;
+                for (int &c : maximumClique)
+                {
+                    if (graph[candidate][c] == 0)
+                    {
+                        belongsToClique = false;
                         break;
+                    }
+                    if (belongsToClique)
+                    {
+                        newCandidates.push_back(candidate);
                     }
                 }
 
-                if(ajdacentesATodos){
-                    novosCandidatos.push_back(u);
+                if (newCandidates.size() > candidates.size())
+                {
+                    candidates = newCandidates;
                 }
             }
-            candidatos = novosCandidatos;
         }
+
+        cout << "Clique máxima encontrada:" << endl;
+
+        for (unsigned int i = 0; i < maximumClique.size(); i++)
+        {
+            cout << maximumClique[i] << " ";
+        }
+
+        cout << endl;
+
+        return 0;
     }
-    
-    for(unsigned int i = 0; i<cliqueMaxima.size(); i++){
-        cout << cliqueMaxima[i] << " ";
-    }
-
-    cout << endl;
-
-    return 0;
-
-}
