@@ -61,12 +61,11 @@ int main(int argc, char *argv[])
                 connections.push_back(node);
         }
 
-        vector<int> clique;
         for (int connection1 : connections)
         {
+            vector<int> clique = {currentNode, connection1}; // Move initialization here
             for (int connection2 : connections)
             {
-                clique = {currentNode, connection1};
                 bool inClique = true;
                 for (int member : clique)
                 {
