@@ -6,6 +6,7 @@ Baseado no arquivo cedido pelos professores
 '''
 
 import networkx as nx
+import sys
 
 def convert_items_to_int(clique:list)->list:
     for i, node in enumerate(clique):
@@ -13,7 +14,10 @@ def convert_items_to_int(clique:list)->list:
     
     return clique
 
-file_name = "grafo20nos.txt"
+if(len(sys.argv)!= 2):
+    raise ValueError("Rode o arquivo com o grafo como argumento (ex: python3 main.py grafo.txt)")
+
+file_name = sys.argv[1]
 
 with open(file_name, 'r') as file:
     next(file)
@@ -28,5 +32,5 @@ print('Cliques máximas encontradas:')
 for clique in cliques:
     if(len(clique) == largest_clique_size):
         converted_clique = convert_items_to_int(clique)
-        converted_clique.sort(reverse=True)
+        converted_clique.sort()
         print(converted_clique)
