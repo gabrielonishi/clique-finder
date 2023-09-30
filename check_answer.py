@@ -29,8 +29,19 @@ largest_clique_size = len(max(cliques, key=len))
 
 print('Tamanho da clique máxima: ', largest_clique_size)
 print('Cliques máximas encontradas:')
+
+first_first_index = 10e7
+
+right_answer = None
+
 for clique in cliques:
     if(len(clique) == largest_clique_size):
         converted_clique = convert_items_to_int(clique)
         converted_clique.sort()
         print(converted_clique)
+        if converted_clique[0] < first_first_index:
+            first_first_index = converted_clique[0]
+            right_answer = clique
+
+print('Mas provavelmente o algoritmo brute force devolveu a seguinte clique máxima:')
+print(right_answer)
