@@ -7,11 +7,6 @@ using namespace std;
 
 vector<vector<int>> ReadGraph(const string &fileName, int &numNodes, int &numEdges)
 {
-    /*
-    Lê grafo de um arquivo txt, preenche informações sobre número de
-    vértices e números de arestas e cria uma matriz de adjacência para
-    representar o grafo
-    */
     ifstream file(fileName);
     file >> numNodes >> numEdges;
 
@@ -30,34 +25,25 @@ vector<vector<int>> ReadGraph(const string &fileName, int &numNodes, int &numEdg
     return graph;
 }
 
-vector<int> FindClique(vector<vector<int>> &graph, int &startingNode, int &numNodes)
+void printIntVector(vector<int> &vector)
 {
-    startingNode++;
-    vector<int> clique = {startingNode};
-
-    for (int candidate = startingNode + 1; candidate < numNodes; candidate++)
+    for (unsigned int i = 0; i < vector.size(); i++)
     {
-        int inClique = true;
-        for (int nodeInClique : clique)
-        {
-            if (graph[nodeInClique][candidate] == 0)
-            {
-                inClique = false;
-            }
-        }
-
-        if (inClique)
-        {
-            clique.push_back(candidate);
-        }
+        cout << vector[i] << " ";
     }
 
-    return clique;
+    cout << endl;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    string fileName = "grafo20nos.txt";
+    if (argc != 2)
+    {
+        cout << "Rode o arquivo com o arquivo do grafo como argumento (ex: ./main arquivo.txt)" << endl;
+        return 1;
+    }
+
+    string fileName = argv[1];
 
     int numNodes, numEdges;
 
@@ -65,15 +51,32 @@ int main()
 
     cout << numNodes << " " << numEdges << endl;
 
-    int startingNode = 0;
-
-    vector<int> maximumClique = FindClique(graph, startingNode, numNodes);
-
-    for (int currentNode = 1; currentNode < numNodes; currentNode++)
+    vector<int> maximumClique;
+    for (int currentNode = 0; currentNode < numNodes; currentNode++)
     {
-        vector<int> currentClique = FindClique(graph, currentNode, numNodes);
-        if (currentClique.size() > maximumClique.size()){
-            maximumClique = currentClique;
+        vector<int> connections;
+        for (int node = 0; node < numNodes; node++)
+        {
+            if (graph[currentNode][node] == 1)
+                connections.push_back(node);
+        }
+
+        for (int connection1 : connections)
+        {
+            vector<int> clique = {currentNode, connection1}; // Move initialization here
+            for (int connection2 : connections)
+            {
+                bool inClique = true;
+                for (int member : clique)
+                {
+                    if (graph[member][connection2] == 0)
+                        inClique = false;
+                }
+                if (inClique)
+                    clique.push_back(connection2);
+            }
+            if (clique.size() > maximumClique.size())
+                maximumClique = clique;
         }
     }
 
