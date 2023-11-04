@@ -1,16 +1,20 @@
 import networkx as nx
-import random
+import sys, os
 
-num_vertices = 20
-probabilidade_conexao = 0.7
+num_vertices = int(sys.argv[1])
+connection_probability = float(sys.argv[2])
+graph_name = sys.argv[3].split('.')[0]
 
-grafo = nx.fast_gnp_random_graph(num_vertices, probabilidade_conexao)
+graph = nx.fast_gnp_random_graph(num_vertices, connection_probability)
 
-nome_arquivo = "grafo.txt"
+output_directory = os.path.join(os.pardir, "graphs")
+os.makedirs(output_directory, exist_ok=True)
 
-with open(nome_arquivo, 'w') as arquivo:
-    arquivo.write(f"{num_vertices} {grafo.number_of_edges()}\n")
-    for aresta in grafo.edges():
-        arquivo.write(f"{aresta[0]+1} {aresta[1]+1}\n")
+filename = os.path.join(output_directory, f"{graph_name}.txt")
 
-print(f"Grafo densamente conectado gerado e salvo em '{nome_arquivo}'.")
+with open(filename, 'w') as f:
+    f.write(f"{num_vertices} {graph.number_of_edges()}\n")
+    for edge in graph.edges():
+        f.write(f"{edge[0]+1} {edge[1]+1}\n")
+
+print(f"Grafo densamente conectado gerado e salvo em ../graphs/{filename}'.")
