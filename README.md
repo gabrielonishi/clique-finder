@@ -19,7 +19,7 @@ The description of the solutions as well as an analysis of it's performance are 
 The maximum clique problem is a fundamental concept in graph theory and combinatorial optimization. It revolves around identifying the largest possible subset of vertices within a given graph, where every pair of vertices is connected by an edge. In other words, a maximum clique is a group of nodes that are fully interconnected, with no additional vertices that can be added to maintain this complete connectivity. Solving the maximum clique problem involves finding this largest possible clique within a given graph, and it has numerous applications in fields such as social network analysis, computer network design, and bioinformatics, where identifying tightly-knit communities or functional relationships is of paramount importance.
 
 <p align="center">
-  <img src="clique_illustration.svg" alt="https://upload.wikimedia.org/wikipedia/commons/3/3d/Brute_force_Clique_algorithm.svg">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Brute_force_Clique_algorithm.svg" alt="https://upload.wikimedia.org/wikipedia/commons/3/3d/Brute_force_Clique_algorithm.svg">
 </p>
 
 ## 
