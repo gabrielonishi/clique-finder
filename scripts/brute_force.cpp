@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector<vector<int>> ReadGraph(const string &fileName, int &numNodes, int &numEdges)
+vector<vector<int>> readGraph(const string &fileName, int &numNodes, int &numEdges)
 {
     ifstream file(fileName);
     file >> numNodes >> numEdges;
@@ -35,11 +35,26 @@ void printIntVector(vector<int> &vector)
     cout << endl;
 }
 
+void printOutput(vector<int> &maximumClique)
+{
+    cout << "Size of the maximum clique: " << maximumClique.size() << endl;
+    cout << "Maximum clique found:" << endl;
+    cout << "[";
+
+    unsigned int i = 0;
+
+    for (i; i < maximumClique.size() - 1; i++)
+    {
+        cout << maximumClique[i] + 1 << ", ";
+    }
+    cout << maximumClique[i] + 1 << "]" << endl;
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 2)
     {
-        cout << "Rode o arquivo com o arquivo do grafo como argumento (ex: ./main arquivo.txt)" << endl;
+        cout << "Run the program with the graph file as an argument (e.g., ./main graph.txt)" << endl;
         return 1;
     }
 
@@ -47,9 +62,7 @@ int main(int argc, char *argv[])
 
     int numNodes, numEdges;
 
-    vector<vector<int>> graph = ReadGraph(fileName, numNodes, numEdges);
-
-    cout << numNodes << " " << numEdges << endl;
+    vector<vector<int>> graph = readGraph(fileName, numNodes, numEdges);
 
     vector<int> maximumClique;
     for (int currentNode = 0; currentNode < numNodes; currentNode++)
@@ -80,14 +93,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    cout << "Clique máxima encontrada:" << endl;
-
-    for (unsigned int i = 0; i < maximumClique.size(); i++)
-    {
-        cout << maximumClique[i] + 1 << " ";
-    }
-
-    cout << endl;
+    printOutput(maximumClique);
 
     return 0;
 }
