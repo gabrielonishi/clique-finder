@@ -1,21 +1,21 @@
 '''
-Utiliza a biblioteca netorkx para encontrar a clique máxima
-para fins de correção
+Uses the networkx library to find the maximum clique
+for grading purposes
 
-Baseado no arquivo cedido pelos professores
+Based on the file provided by the instructors
 '''
 
 import networkx as nx
 import sys
 
-def convert_items_to_int(clique:list)->list:
+def convert_items_to_int(clique: list) -> list:
     for i, node in enumerate(clique):
         clique[i] = int(node)
     
     return clique
 
-if(len(sys.argv)!= 2):
-    raise ValueError("Rode o arquivo com o grafo como argumento (ex: python3 main.py grafo.txt)")
+if len(sys.argv) != 2:
+    raise ValueError("Run the program with the graph as an argument (e.g., python3 main.py graph.txt)")
 
 file_name = sys.argv[1]
 
@@ -27,15 +27,15 @@ cliques = list(nx.find_cliques(G))
 
 largest_clique_size = len(max(cliques, key=len))
 
-print('Tamanho da clique máxima: ', largest_clique_size)
-print('Cliques máximas encontradas:')
+print('Size of the maximum clique: ', largest_clique_size)
+print('Maximum cliques found:')
 
 first_first_index = 10e7
 
 right_answer = None
 
 for clique in cliques:
-    if(len(clique) == largest_clique_size):
+    if len(clique) == largest_clique_size:
         converted_clique = convert_items_to_int(clique)
         converted_clique.sort()
         print(converted_clique)
@@ -43,5 +43,5 @@ for clique in cliques:
             first_first_index = converted_clique[0]
             right_answer = clique
 
-print('Mas provavelmente o algoritmo brute force devolveu a seguinte clique máxima:')
+print('But probably the brute force algorithm returned the following maximum clique:')
 print(right_answer)
