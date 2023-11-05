@@ -20,4 +20,4 @@ with open(filename, 'w') as f:
     for edge in graph.edges():
         f.write(f"{edge[0]+1} {edge[1]+1}\n")
 
-print(f"Grafo densamente conectado gerado e salvo em {parent_directory}/graphs'.")
+print(f"Graph generated and saved at {parent_directory}/graphs'.")
