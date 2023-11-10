@@ -43,10 +43,11 @@ void printOutput(vector<int> &maximumClique)
 
     unsigned int i = 0;
 
-    for (i; i < maximumClique.size() - 1; i++)
+    for (i = 0; i < maximumClique.size() - 1; i++)
     {
         cout << maximumClique[i] + 1 << ", ";
     }
+
     cout << maximumClique[i] + 1 << "]" << endl;
 }
 
