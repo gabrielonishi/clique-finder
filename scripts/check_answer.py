@@ -34,14 +34,11 @@ first_first_index = 10e7
 
 right_answer = None
 
+max_cliques = list()
+
 for clique in cliques:
     if len(clique) == largest_clique_size:
         converted_clique = convert_items_to_int(clique)
         converted_clique.sort()
         print(converted_clique)
-        if converted_clique[0] < first_first_index:
-            first_first_index = converted_clique[0]
-            right_answer = clique
-
-print('But probably the brute force algorithm returned the following maximum clique:')
-print(right_answer)
+        max_cliques.append(converted_clique)
