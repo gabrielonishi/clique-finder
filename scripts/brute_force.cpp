@@ -2,8 +2,11 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
+
+bool sort_by_id(int id_1, int id_2) { return (id_1 < id_2); }
 
 vector<vector<int>> readGraph(const string &fileName, int &numNodes, int &numEdges)
 {
@@ -40,6 +43,8 @@ void printOutput(vector<int> &maximumClique)
     cout << "Size of the maximum clique: " << maximumClique.size() << endl;
     cout << "Maximum clique found:" << endl;
     cout << "[";
+
+    sort(maximumClique.begin(), maximumClique.end(), sort_by_id);
 
     unsigned int i = 0;
 
