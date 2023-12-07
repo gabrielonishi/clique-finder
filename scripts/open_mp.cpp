@@ -58,6 +58,7 @@ void printOutput(vector<int> &maximumClique)
 
 int main(int argc, char *argv[])
 {
+
     if (argc != 2)
     {
         cout << "Run the program with the graph file as an argument (e.g., ./main graph.txt)" << endl;
@@ -71,8 +72,11 @@ int main(int argc, char *argv[])
     vector<vector<int>> graph = readGraph(fileName, numNodes, numEdges);
 
     vector<int> maximumClique;
+
+    #pragma omp parallel for
     for (int currentNode = 0; currentNode < numNodes; currentNode++)
     {
+        // Pega todas as conexões
         vector<int> connections;
         for (int node = 0; node < numNodes; node++)
         {
@@ -80,9 +84,12 @@ int main(int argc, char *argv[])
                 connections.push_back(node);
         }
 
+        // Para cada conexão do nó atual...
         for (int connection1 : connections)
         {
             vector<int> clique = {currentNode, connection1};
+
+            // ... verifica as conexões dessa conexão
             for (int connection2 : connections)
             {
                 bool inClique = true;
@@ -94,6 +101,8 @@ int main(int argc, char *argv[])
                 if (inClique)
                     clique.push_back(connection2);
             }
+
+            #pragma omp critical
             if (clique.size() > maximumClique.size())
                 maximumClique = clique;
         }
