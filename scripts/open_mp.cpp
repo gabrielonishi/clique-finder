@@ -85,14 +85,17 @@ int main(int argc, char *argv[])
         }
 
         // Para cada conexão do nó atual...
+        #pragma omp parallel for
         for (int connection1 : connections)
         {
             vector<int> clique = {currentNode, connection1};
 
             // ... verifica as conexões dessa conexão
+            #pragma omp parallel for
             for (int connection2 : connections)
             {
                 bool inClique = true;
+
                 for (int member : clique)
                 {
                     if (graph[member][connection2] == 0)
