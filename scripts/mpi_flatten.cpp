@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <mpi.h>
+#include <chrono>
 
 using namespace std;
 
@@ -59,6 +60,8 @@ void printOutput(vector<int> &maximumClique, int numNodes)
 
 int main(int argc, char *argv[])
 {
+    auto inicio = chrono::high_resolution_clock::now();
+
     MPI_Init(&argc, &argv);
 
     int rank, size;
@@ -82,21 +85,27 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i < size; i++) 
     {
+        chunk_size = numNodes / size;
         MPI_Send(&numNodes, 1, MPI_INT, i, tag, MPI_COMM_WORLD);
-        MPI_Send(&numEdges, 1, MPI_INT, i, tag, MPI_COMM_WORLD);
+        MPI_Send(&chunk_size, 1, MPI_INT, i, tag, MPI_COMM_WORLD);
         MPI_Send(flattenedGraph.data(), numNodes * numNodes, MPI_INT, i, tag, MPI_COMM_WORLD);
     }
     } else 
     {
         MPI_Recv(&numNodes, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Recv(&numEdges, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&chunk_size, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         flattenedGraph.resize(numNodes * numNodes);
         MPI_Recv(flattenedGraph.data(), numNodes * numNodes, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
+    // cout << "Chunk size: " << chunk_size << endl;
+
+    int startNode = rank * chunk_size;
+    int endNode = rank*chunk_size + chunk_size;
+
     vector<int> maximumClique;
-    for (int currentNode = 0; currentNode < numNodes; currentNode++)
+    for (int currentNode = startNode; currentNode < endNode; currentNode++)
     {
         vector<int> connections;
         for (int node = 0; node < numNodes; node++)
@@ -124,7 +133,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Send maximum clique back to rank 0
     if (rank != 0) 
     {
         MPI_Send(maximumClique.data(), maximumClique.size(), MPI_INT, 0, tag, MPI_COMM_WORLD);
@@ -142,8 +150,12 @@ int main(int argc, char *argv[])
             }
         }
         printOutput(maximumClique, numNodes);
+        auto fim = chrono::high_resolution_clock::now();
+        auto duracao = chrono::duration_cast<std::chrono::milliseconds>(fim - inicio);
+        cout << "Tempo de execução: " << duracao.count() << " ms\n";
     }
 
     MPI_Finalize();
+
     return 0;
 }

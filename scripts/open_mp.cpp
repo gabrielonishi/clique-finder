@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
 
@@ -58,6 +59,7 @@ void printOutput(vector<int> &maximumClique)
 
 int main(int argc, char *argv[])
 {
+    auto inicio = chrono::high_resolution_clock::now();
 
     if (argc != 2)
     {
@@ -110,6 +112,10 @@ int main(int argc, char *argv[])
     }
 
     printOutput(maximumClique);
+
+    auto fim = chrono::high_resolution_clock::now();
+    auto duracao = chrono::duration_cast<std::chrono::milliseconds>(fim - inicio);
+    cout << "Tempo de execução: " << duracao.count() << " ms\n";
 
     return 0;
 }

@@ -4,6 +4,8 @@
 #include <fstream>
 #include <algorithm>
 
+#include <chrono>
+
 using namespace std;
 
 bool sort_by_id(int id_1, int id_2) { return (id_1 < id_2); }
@@ -58,6 +60,8 @@ void printOutput(vector<int> &maximumClique)
 
 int main(int argc, char *argv[])
 {
+    auto inicio = chrono::high_resolution_clock::now();
+
     if (argc != 2)
     {
         cout << "Run the program with the graph file as an argument (e.g., ./main graph.txt)" << endl;
@@ -101,5 +105,9 @@ int main(int argc, char *argv[])
 
     printOutput(maximumClique);
 
+    auto fim = chrono::high_resolution_clock::now();
+    auto duracao = chrono::duration_cast<std::chrono::milliseconds>(fim - inicio);
+    cout << "Tempo de execução: " << duracao.count() << " ms\n";
+    
     return 0;
 }
