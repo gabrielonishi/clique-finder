@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <mpi.h>
 
 using namespace std;
 
@@ -58,25 +59,39 @@ void printOutput(vector<int> &maximumClique)
 
 int main(int argc, char *argv[])
 {
+    MPI_Init(&argc, &argv);
 
-    if (argc != 2)
-    {
-        cout << "Run the program with the graph file as an argument (e.g., ./main graph.txt)" << endl;
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    if (argc != 2) {
+        if (rank == 0) {
+            cout << "Run the program with the graph file as an argument (e.g., ./main graph.txt)" << endl;
+        }
+        MPI_Finalize();
         return 1;
     }
 
     string fileName = argv[1];
 
     int numNodes, numEdges;
+    vector<vector<int>> graph;
 
-    vector<vector<int>> graph = readGraph(fileName, numNodes, numEdges);
+    if (rank == 0) {
+        graph = readGraph(fileName, numNodes, numEdges);
+    }
+
+    MPI_Bcast(&numNodes, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&numEdges, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // Dividing the work among processes
+    int startNode = rank * (numNodes / size);
+    int endNode = (rank == size - 1) ? numNodes : (rank + 1) * (numNodes / size);
 
     vector<int> maximumClique;
-
-    #pragma omp parallel for
     for (int currentNode = 0; currentNode < numNodes; currentNode++)
     {
-        // Pega todas as conexões
         vector<int> connections;
         for (int node = 0; node < numNodes; node++)
         {
@@ -84,16 +99,12 @@ int main(int argc, char *argv[])
                 connections.push_back(node);
         }
 
-        // Para cada conexão do nó atual...
         for (int connection1 : connections)
         {
             vector<int> clique = {currentNode, connection1};
-
-            // ... verifica as conexões dessa conexão
             for (int connection2 : connections)
             {
                 bool inClique = true;
-
                 for (int member : clique)
                 {
                     if (graph[member][connection2] == 0)
@@ -102,14 +113,30 @@ int main(int argc, char *argv[])
                 if (inClique)
                     clique.push_back(connection2);
             }
-
-            #pragma omp critical
             if (clique.size() > maximumClique.size())
                 maximumClique = clique;
         }
     }
 
-    printOutput(maximumClique);
+    vector<int> globalMaxClique;
+    if (rank == 0) {
+        globalMaxClique = maximumClique;
+        for (int i = 1; i < size; i++) {
+            vector<int> tempMaxClique;
+            MPI_Recv(&tempMaxClique[0], maximumClique.size(), MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            if (tempMaxClique.size() > globalMaxClique.size()) {
+                globalMaxClique = tempMaxClique;
+            }
+        }
+    } else {
+        MPI_Send(&maximumClique[0], maximumClique.size(), MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
+
+    if (rank == 0) {
+        printOutput(globalMaxClique);
+    }
+
+    MPI_Finalize();
 
     return 0;
 }
