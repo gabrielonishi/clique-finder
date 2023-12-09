@@ -9,14 +9,22 @@ The maximum clique problem is a [well-known problem](https://en.wikipedia.org/wi
 ## Project Structure
 The description of the solutions as well as an analysis of it's performance are in the `performance_report.ipynb`. The solutions implemented in C++ are in the `scripts` folder with other utility scripts:
 
+ - `/executables`: Directory with C++ executables for each script
+ - `/graphs`: Directory with graphs of different sizes (used to measure implementation efficiency)
  - `/scripts`
     - `brute_force.cpp`: Solution via brute force
     - `check_answer.py`: Python utility script to check the right answer using the `networkx` lib
+    - `flattened_graph.cpp`: Solution via brute force with 1D array
     - `generate_graph.py`: Python utility script to generate a random graph using the `networkx` lib
+    - `mpi_flatten.cpp`: Brute force parallelized with MPI (to run in cluster environment)
+    - `mpi_flatten.slurm`: Slurm instruction file
+    - `open_mp.cpp`: Brute force parallelized with OpenMP
  - `/solution_report.ipynb`: Analysis of each solution approach
 
 ## About the Problem
 The maximum clique problem is a fundamental concept in graph theory and combinatorial optimization. It revolves around identifying the largest possible subset of vertices within a given graph, where every pair of vertices is connected by an edge. In other words, a maximum clique is a group of nodes that are fully interconnected, with no additional vertices that can be added to maintain this complete connectivity. Solving the maximum clique problem involves finding this largest possible clique within a given graph, and it has numerous applications in fields such as social network analysis, computer network design, and bioinformatics, where identifying tightly-knit communities or functional relationships is of paramount importance.
+
+To see more explanations and results, be sure to checkout the [Solution Report](solution_report.ipynb).
 
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Brute_force_Clique_algorithm.svg" alt="https://upload.wikimedia.org/wikipedia/commons/3/3d/Brute_force_Clique_algorithm.svg">
